@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
         setupViewPager();
         initTabLayout();
+
     }
 
     private void initToolbar(){
@@ -45,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
         vAdapter.addFrag(new Map(), "MAP");
         vp.setOffscreenPageLimit(2);
         vp.setAdapter(vAdapter);
-        //vp.setCurrentItem(1);
+        vp.setCurrentItem(2);
     }
 
     private void initTabLayout() {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(vp);
         //setupTabIcons();
-        vp.setCurrentItem(0);
+        vp.setCurrentItem(2);
 		/*tabLayout.setOnTabSelectedListener(new OnTabSelectedListener() {
 			@Override
 			public void onTabUnselected(Tab arg0) {

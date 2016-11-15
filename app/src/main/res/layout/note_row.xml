@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:gravity="center_vertical"
+    android:background="#ACBCCC">
+
+    <ImageView android:id="@+id/note_row_image"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_menu_gallery"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/note_row_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="TITLE"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
+
+        <TextView android:id="@+id/note_row_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="DATE"
+            android:textColor="@color/colorPrimary_transparent"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <ImageView android:id="@+id/note_row_more"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/note_more"
+        android:layout_margin="6dp"/>
+
+</LinearLayout>

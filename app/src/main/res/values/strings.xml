@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">GPA</string>
+    <string name="credits">Credits</string>
+    <string name="name_optional">Name (optional)</string>
+    <string name="grade">Grade</string>
+    <string name="gpa_empty">Press + on the bottom right to add courses</string>
+    <string name="note_empty">Press + on the bottom right to add notes</string>
+    <array name="grades_letter">
+        <item>A+</item>
+        <item>A</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B</item>
+        <item>B-</item>
+        <item>C+</item>
+        <item>C</item>
+        <item>C-</item>
+        <item>D</item>
+        <item>D-</item>
+        <item>F</item>
+    </array>
+    <string-array name="credits">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
 </resources>

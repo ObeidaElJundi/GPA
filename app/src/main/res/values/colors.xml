@@ -4,10 +4,16 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>-->
     <color name="colorPrimary">#2E3A4A</color>
-    <color name="colorPrimaryDark">#242e3b</color>
+    <color name="colorPrimaryDark">#1b222c</color>
+    <color name="colorPrimaryDark_dark">#151b23</color>
+    <color name="colorPrimaryDark_light">#484e56</color>
     <color name="colorAccent">#F98145</color>
+    <color name="colorPrimary_transparent">#992E3A4A</color>
+    <color name="colorAccent_transparent">#88F98145</color>
     <color name="fragmentsBackground">#818892</color>
     <color name="textColorPrimary">#82B0A6</color>
+    <color name="textColorPrimary_transparent">#9982B0A6</color>
     <color name="blackTransparent">#99000000</color>
     <color name="white">#ffffff</color>
+    <color name="white_transparent">#66ffffff</color>
 </resources>

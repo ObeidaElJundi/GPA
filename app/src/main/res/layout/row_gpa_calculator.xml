@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="22dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginLeft="12dp"
+    android:padding="8dp"
+    android:gravity="center_vertical"
+    android:background="#ACBCCC">
+
+    <EditText android:id="@+id/courseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="@string/name_optional"
+        android:textColorHint="@color/white_transparent"
+        android:textColor="@color/colorPrimary"
+        android:maxLines="1"
+        android:imeOptions="flagNoExtractUi"/>
+
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp">
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/credits"
+            android:textColor="@color/colorPrimary"
+            android:textAppearance="@android:style/TextAppearance.Small"/>
+        <com.aigestudio.wheelpicker.WheelPicker
+            android:id="@+id/creditWheel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:wheel_data="@array/credits"/>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp">
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grade"
+            android:textColor="@color/colorPrimary"
+            android:textAppearance="@android:style/TextAppearance.Small"/>
+        <com.aigestudio.wheelpicker.WheelPicker
+            android:id="@+id/gradeWheel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:wheel_data="@array/grades_letter"/>
+    </LinearLayout>
+
+    <ImageView android:id="@+id/delete"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:background="@drawable/delete_background"
+        android:layout_margin="8dp"/>
+
+</LinearLayout>
