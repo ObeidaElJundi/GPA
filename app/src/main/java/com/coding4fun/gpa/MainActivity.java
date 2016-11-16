@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import com.coding4fun.adapters.ViewPagerAdapter;
 
 /**
- * Created by coding4fun on 09-Oct-16.
+ * Created by coding4fun & alRawas on 09-Oct-16.
  */
 
 public class MainActivity extends AppCompatActivity {
