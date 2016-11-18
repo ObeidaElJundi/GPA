@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.aigestudio.wheelpicker.WheelPicker;
 import com.coding4fun.gpa.R;
@@ -80,13 +81,13 @@ public class GpaRVadapter extends RecyclerView.Adapter <RecyclerView.ViewHolder>
             gradeWheel.setOnItemSelectedListener(new WheelPicker.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(WheelPicker picker, Object data, int position) {
-                    courses.get(getAdapterPosition()).setGrade(position);
+                    courses.get(getAdapterPosition()).updateGrade(position);
                 }
             });
             creditWheel.setOnItemSelectedListener(new WheelPicker.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(WheelPicker picker, Object data, int position) {
-                    courses.get(getAdapterPosition()).setCredit(position);
+                    courses.get(getAdapterPosition()).updateCredit(position);
                 }
             });
             courseName.addTextChangedListener(new TextWatcher() {
@@ -103,8 +104,11 @@ public class GpaRVadapter extends RecyclerView.Adapter <RecyclerView.ViewHolder>
     }
 
     public class EmptyViewHolder extends RecyclerView.ViewHolder {
+        TextView tv;
         public EmptyViewHolder(View itemView) {
             super(itemView);
+            tv = (TextView) itemView.findViewById(R.id.empty_tv);
+            tv.setText(context.getResources().getString(R.string.gpa_empty));
         }
     }
 

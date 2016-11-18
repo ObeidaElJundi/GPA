@@ -221,8 +221,11 @@ public class Notebook extends Fragment implements View.OnClickListener, View.OnT
             }
             if(n != null) {
                 notesList.add(n);
-                adapter.notifyItemInserted(notesList.size() - 1);
-                rv.scrollToPosition(notesList.size() - 1);
+                if(notesList.size() == 1) adapter.notifyItemChanged(0);
+                else {
+                    adapter.notifyItemInserted(notesList.size() - 1);
+                    rv.scrollToPosition(notesList.size() - 1);
+                }
             }
             /*switch (requestCode){
                 case 99:

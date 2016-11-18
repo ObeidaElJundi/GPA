@@ -5,7 +5,7 @@
     <string name="grade">Grade</string>
     <string name="gpa_empty">Press + on the bottom right to add courses</string>
     <string name="note_empty">Press + on the bottom right to add notes</string>
-    <array name="grades_letter">
+    <string-array name="grades_letter">
         <item>A+</item>
         <item>A</item>
         <item>A-</item>
@@ -18,7 +18,21 @@
         <item>D</item>
         <item>D-</item>
         <item>F</item>
-    </array>
+    </string-array>
+    <string-array name="grades_number">
+        <item>4</item>
+        <item>4</item>
+        <item>3.67</item>
+        <item>3.33</item>
+        <item>3</item>
+        <item>2.67</item>
+        <item>2.33</item>
+        <item>2</item>
+        <item>1.67</item>
+        <item>1.33</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
     <string-array name="credits">
         <item>1</item>
         <item>2</item>

@@ -7,8 +7,8 @@ public class Course{
 	private int credit;
 	private int creditIndex, gradeIndex;
 	private static final String[] gradesByLetter = {"A+","A","A-","B+","B","B-","C+","C","C-","D","D-","F"};
-	private static final double[] gradesByNumber = {4.0,4.0,3.667,3.333,3.0,2.667,2.333,2.0,1.667,1.333,1.0,0.0};
-	private static final int[] credits = {1,2,3,4,5};
+	public static final double[] gradesByNumber = {4,4,3.67,3.33,3,2.67,2.33,2,1.67,1.33,1,0};
+	public static final int[] credits = {1,2,3,4,5};
 	
 	public Course() {
 		name = "";
@@ -23,7 +23,7 @@ public class Course{
 		grade = gradesByLetter[i];
 	}
 	
-	public void updatecredit(int i){
+	public void updateCredit(int i){
 		creditIndex = i;
 		credit = credits[i];
 	}

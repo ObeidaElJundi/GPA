@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,23 +9,24 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/GPA_RV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"/>
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/GPA_add_FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/add"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        app:layout_anchor="@id/GPA_RV"
+        app:layout_anchorGravity="bottom|right"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/GPA_done_FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/done"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/done2"
+        app:layout_anchor="@id/GPA_RV"
+        app:layout_anchorGravity="bottom|left"/>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
