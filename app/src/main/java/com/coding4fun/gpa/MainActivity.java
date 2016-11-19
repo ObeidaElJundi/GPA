@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         vAdapter.addFrag(new Timer(), "TIMER");
         vAdapter.addFrag(new Notebook(), "NOTEBOOK");
         vAdapter.addFrag(new Map(), "MAP");
-        vp.setOffscreenPageLimit(2);
+        vp.setOffscreenPageLimit(3);
         vp.setAdapter(vAdapter);
         vp.setCurrentItem(2);
     }

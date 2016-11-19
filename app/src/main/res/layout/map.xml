@@ -1,22 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragmentsBackground">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MAP"
-        android:layout_centerInParent="true"
-        android:textSize="25sp"
-        android:layout_marginTop="22dp"/>
+    <fragment android:id="@+id/map_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:visibility="gone"/>
 
+    <RelativeLayout android:id="@+id/map_resolvableErrorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView android:id="@+id/map_resolvableErrorTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ACBCCC"
+            android:text="Google Maps requires Google Play Services\nwhich are not available!"/>
+
+        <Button android:id="@+id/map_resolvableErrorBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/map_resolvableErrorTV"
+            android:text="Get Services"
+            android:textSize="22sp"
+            android:textStyle="bold|italic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/map_ErrorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView android:id="@+id/map_ErrorTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ACBCCC"
+            android:text="Google Maps requires Google Play Services\nwhich are not available!"/>
+
+    </RelativeLayout>
+
+    <!--
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/heart"/>
+    -->
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
