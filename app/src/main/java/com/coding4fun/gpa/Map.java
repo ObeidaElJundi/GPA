@@ -34,6 +34,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -54,11 +55,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by coding4fun on 09-Oct-16.
  */
 
-public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMyLocationButtonClickListener, LocationListener {
 
     private final int REQUEST_CHECK_SETTINGS = 88;
     private final int REQUEST_CHECK_PERMISSION = 66;
-    private final int REQUEST_GOOGLE_PLAY_SERVICES  = 44;
+    private final int REQUEST_CHECK_FINE_PERMISSION_TO_ENABLE_MY_LOCATION_BUTTON = 64;
+    private final int REQUEST_CHECK_FINE_PERMISSION_TO_GET_LOCATION_UPDATES = 62;
+    private final int REQUEST_GOOGLE_PLAY_SERVICES = 44;
     GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     LatLng currentLocation;
@@ -76,16 +80,19 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         resolvableErrorLayout = v.findViewById(R.id.map_resolvableErrorLayout);
         map = v.findViewById(R.id.map_fragment);
         errorTV = (TextView) v.findViewById(R.id.map_ErrorTV);
-        setHasOptionsMenu(true);	//assign menu only for this fragment
+        setHasOptionsMenu(true);    //assign menu only for this fragment
         initPrefs();
         GoogleApiAvailability gAPI = GoogleApiAvailability.getInstance();
         int isAvailable = gAPI.isGooglePlayServicesAvailable(getContext());
         if (isAvailable == ConnectionResult.SUCCESS) { //everything is OK
             //initMap(); // TODO: checkLocationSettings();
+            Log.e("GPA", "GooglePlayServices are Available");
             initGoogleApiClient();
         } else if (gAPI.isUserResolvableError(isAvailable)) { //there is an error, but the user can do something about it
+            Log.e("GPA", "GooglePlayServices are not available, but can be fixed");
             initResolvableError(v, gAPI, isAvailable);
         } else { //there is an error, and the user can't do something about it...
+            Log.e("GPA", "GooglePlayServices are not available!");
             initError("Google Play Services are NOT available!");
         }
         return v;
@@ -108,10 +115,11 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_menu_scale:
-                scale();
+                scale2();
                 return true;
             case R.id.map_menu_Where_am_I:
                 showCurrentLocation();
+                //onMyLocationButtonClick();
                 return true;
             default:
                 return false;
@@ -124,8 +132,9 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     }
 
     private void initResolvableError(View v, final GoogleApiAvailability gAPI, final int isAvailable) {
-        if(map.getVisibility() == View.VISIBLE) map.setVisibility(View.GONE);
-        if(resolvableErrorLayout.getVisibility() == View.VISIBLE) resolvableErrorLayout.setVisibility(View.GONE);
+        if (map.getVisibility() == View.VISIBLE) map.setVisibility(View.GONE);
+        if (resolvableErrorLayout.getVisibility() == View.VISIBLE)
+            resolvableErrorLayout.setVisibility(View.GONE);
         resolvableErrorLayout.setVisibility(View.VISIBLE);
         ((Button) v.findViewById(R.id.map_resolvableErrorBTN)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,47 +145,55 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     }
 
     private void initError(String errorMSG) {
-        if(resolvableErrorLayout.getVisibility() == View.VISIBLE) resolvableErrorLayout.setVisibility(View.GONE);
-        if(map.getVisibility() == View.VISIBLE) map.setVisibility(View.GONE);
+        if (resolvableErrorLayout.getVisibility() == View.VISIBLE)
+            resolvableErrorLayout.setVisibility(View.GONE);
+        if (map.getVisibility() == View.VISIBLE) map.setVisibility(View.GONE);
         errorLayout.setVisibility(View.VISIBLE);
-        errorTV.setText("Opsss! Google Maps can't be shown!\n"+errorMSG);
+        errorTV.setText("Opsss! Google Maps can't be shown!\n" + errorMSG);
     }
 
     private void initMap() {
-        if(resolvableErrorLayout.getVisibility() == View.VISIBLE) resolvableErrorLayout.setVisibility(View.GONE);
-        if(errorLayout.getVisibility() == View.VISIBLE) errorLayout.setVisibility(View.GONE);
+        Log.e("GPA", "initializing map");
+        if (resolvableErrorLayout.getVisibility() == View.VISIBLE)
+            resolvableErrorLayout.setVisibility(View.GONE);
+        if (errorLayout.getVisibility() == View.VISIBLE) errorLayout.setVisibility(View.GONE);
         map.setVisibility(View.VISIBLE);
         FAB_addMarker = (FloatingActionButton) v.findViewById(R.id.fab_addMarker);
         SupportMapFragment mf = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
         mf.getMapAsync(this);
     }
 
-    private void initGoogleApiClient(){
+    private void initGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addApi(LocationServices.API)
                 .addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         mGoogleApiClient.connect();
     }
 
-    void checkLocationSettings(){
+    void checkLocationSettings() {
+        Log.e("GPA", "checking location settings");
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,builder.build());
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
             @Override
             public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
                 final Status status = locationSettingsResult.getStatus();
                 //final LocationSettingsStates codes = locationSettingsResult.getLocationSettingsStates();
-                switch (status.getStatusCode()){
+                switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
+                        Log.e("GPA", "location is ON");
                         initMap();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         try {
-                            status.startResolutionForResult(getActivity(),REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e1) {}
+                            Log.e("GPA", "location is OFF. Trying to turn on...");
+                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e1) {
+                        }
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.e("GPA", "location is OFF (Unavailable)");
                         initError("Location Settings issue!");
                         break;
                     default:
@@ -189,11 +206,12 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //final LocationSettingsStates status = LocationSettingsStates.fromIntent(data);
-        switch (requestCode){
+        switch (requestCode) {
 
             case REQUEST_CHECK_SETTINGS:
-                switch (resultCode){
+                switch (resultCode) {
                     case Activity.RESULT_OK:
+                        Log.e("GPA", "location settings was off, but now it is on");
                         initMap();
                         break;
                     case Activity.RESULT_CANCELED:
@@ -205,8 +223,9 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
                 break;
 
             case REQUEST_GOOGLE_PLAY_SERVICES:
-                switch (resultCode){
+                switch (resultCode) {
                     case Activity.RESULT_OK:
+                        Log.e("GPA", "Google Play Services were NOT available, but now they are :)");
                         initMap();
                         break;
                     default:
@@ -219,16 +238,61 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.e("GPA", "map ready");
         mMap = googleMap;
         //mMap.setMyLocationEnabled(true);
         setMapListeners();
+        mMap.setOnMyLocationButtonClickListener(this);
         //getUniMarkerIfExistsThenSetBounds();
-        getCurrentLocation(true);
+        enableMyLocation();
+        //getCurrentLocation(true);
+
+        getUniMarkerIfExists();
+        startLocationUpdates();
+    }
+
+    /**
+     * Enables the My Location layer if the fine location permission has been granted.
+     */
+    private void enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CHECK_FINE_PERMISSION_TO_ENABLE_MY_LOCATION_BUTTON);
+        } else if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
+        }
+    }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CHECK_FINE_PERMISSION_TO_GET_LOCATION_UPDATES);
+            return;
+        }
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+    }
+
+    private void stopLocationUpdates() {
+        if(mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
+        Toast.makeText(getContext(), "current location is available :)", Toast.LENGTH_SHORT).show();
+        Log.e("GPA","current location is available :)\nLat: "+location.getLatitude()+" Lon: "+location.getLongitude());
+        stopLocationUpdates();
+        scale2();
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Toast.makeText(getContext(), "Connected", Toast.LENGTH_SHORT).show();
+        Log.e("GPA","connected");
         checkLocationSettings();
     }
 
@@ -243,14 +307,33 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         initError("Connection failed! Maybe internet access is required!");
     }
 
-    void getUniMarkerIfExistsThenSetBounds(){
+    void getUniMarkerIfExistsThenSetBounds(Boolean setBounds){
         if(prefs.getBoolean("uniMarker",false)){
             double lat = (double) prefs.getFloat("uniLat",0f);
             double lng = (double) prefs.getFloat("uniLng",0f);
             LatLng uni = new LatLng(lat,lng);
             addMarkerOnUni(uni);
-            LatLngBounds b = new LatLngBounds(uni,currentLocation);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(b,99));
+            if(setBounds && currentLocation != null){
+                LatLngBounds b = new LatLngBounds(uni,currentLocation);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(b,99));
+            }
+        }
+    }
+
+    void getUniMarkerIfExists(){
+        if(prefs.getBoolean("uniMarker",false)){
+            double lat = (double) prefs.getFloat("uniLat",0f);
+            double lng = (double) prefs.getFloat("uniLng",0f);
+            LatLng uni = new LatLng(lat,lng);
+            addMarkerOnUni(uni);
+        }
+    }
+    void scale2(){
+        if(uniMarker != null && currentLocation != null){
+            //LatLngBounds b = new LatLngBounds(uniMarker.getPosition(),currentLocation);
+            LatLngBounds.Builder b = new LatLngBounds.Builder();
+            b.include(currentLocation).include(uniMarker.getPosition());
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(b.build(),99));
         }
     }
 
@@ -278,26 +361,43 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
                     Toast.makeText(getContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case REQUEST_CHECK_FINE_PERMISSION_TO_ENABLE_MY_LOCATION_BUTTON:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.e("GPA","requesting FINE location permission : DONE :)");
+                    enableMyLocation();
+                } else {
+                    Toast.makeText(getContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_CHECK_FINE_PERMISSION_TO_GET_LOCATION_UPDATES:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.e("GPA","requesting FINE location permission : DONE :)\nNow let's start getting location updates");
+                    startLocationUpdates();
+                } else {
+                    Toast.makeText(getContext(), "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
     void getCurrentLocation(boolean setBounds){
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             Log.e("GPA","requesting location permission");
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CHECK_PERMISSION);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_CHECK_PERMISSION);
             return;
         }
         Log.e("GPA","getting location");
+        Log.e("GPA","mGoogleApiClient : " + ((mGoogleApiClient==null)?"null":"not null"));
         Location current = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if(current != null){
             Log.e("GPA","current location found");
             Toast.makeText(getContext(), "current location found", Toast.LENGTH_SHORT).show();
             currentLocation = new LatLng(current.getLatitude(),current.getLongitude());
             //goToLocation(currentLocation,15,true);
-            if(setBounds) getUniMarkerIfExistsThenSetBounds();
         }
+        if(setBounds) getUniMarkerIfExistsThenSetBounds(setBounds);
     }
 
     void scale(){
@@ -349,6 +449,7 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             @Override
             public void onClick(View view) {
                 addMarkerOnUni(ll);
+                zoomFABout();
             }
         });
     }
@@ -360,4 +461,16 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     }
 
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopLocationUpdates();
+    }
 }

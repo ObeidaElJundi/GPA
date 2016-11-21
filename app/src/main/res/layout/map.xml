@@ -59,7 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         map:layout_anchor="@id/map_fragment"
-        map:layout_anchorGravity="bottom|right"
-        android:src="@drawable/heart"/>
+        map:layout_anchorGravity="center|right"
+        android:src="@drawable/heart"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>
