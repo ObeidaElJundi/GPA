@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,6 +17,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,6 +55,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by coding4fun on 09-Oct-16.
@@ -109,6 +116,32 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.map_menu, menu);
+
+        MenuItem sItem = menu.findItem(R.id.search);
+        SearchView sView = (SearchView) MenuItemCompat.getActionView(sItem);
+        sView.setSubmitButtonEnabled(true);
+        sView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                try {
+                    Geocoder gc = new Geocoder(getContext());
+                    List<Address> l = gc.getFromLocationName(query,1);
+                    if(l.size() > 0) goToLocation(l.get(0).getLatitude(),l.get(0).getLongitude(),15,true);
+                    else Toast.makeText(getContext(), "No results!\nTry something else...", Toast.LENGTH_LONG).show();
+                } catch (IOException e1) {
+                    Toast.makeText(getContext(), "ERROR!\n"+e1.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //search(newText);
+                return false;
+                //false if the SearchView should perform the default action of showing any suggestions if available,
+                // true if the action was handled by the listener.
+            }
+        });
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -141,6 +174,15 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
                 } else {
                     item.setChecked(true);
                     mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(),R.raw.night_mode_map)); //set night mode style
+                }
+                return true;
+            case R.id.map_menu_3D:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    mMap.setBuildingsEnabled(false);
+                } else {
+                    item.setChecked(true);
+                    mMap.setBuildingsEnabled(true);
                 }
                 return true;
             default:

@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/search"
+        android:title="search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
     <item android:id="@+id/mapType"
         android:title="Map Type"
         app:showAsAction="never">
@@ -28,6 +34,13 @@
         android:checkable="true"
         android:checked="true"
         android:title="Night Mode"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/map_menu_3D"
+        android:checkable="true"
+        android:checked="false"
+        android:title="3D"
         app:showAsAction="never"/>
 
     <!-- TODO: distance & draw way -->
