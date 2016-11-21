@@ -48,6 +48,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -114,12 +115,33 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.normal:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                return true;
+            case R.id.satellite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                return true;
+            case R.id.hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                return true;
+            case R.id.terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                return true;
             case R.id.map_menu_scale:
                 scale2();
                 return true;
             case R.id.map_menu_Where_am_I:
                 showCurrentLocation();
                 //onMyLocationButtonClick();
+                return true;
+            case R.id.map_menu_night_mode:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    mMap.setMapStyle(null); // set default theme
+                } else {
+                    item.setChecked(true);
+                    mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(),R.raw.night_mode_map)); //set night mode style
+                }
                 return true;
             default:
                 return false;
@@ -240,6 +262,7 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     public void onMapReady(GoogleMap googleMap) {
         Log.e("GPA", "map ready");
         mMap = googleMap;
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(),R.raw.night_mode_map)); //set night mode style
         //mMap.setMyLocationEnabled(true);
         setMapListeners();
         mMap.setOnMyLocationButtonClickListener(this);
@@ -460,6 +483,11 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         FAB_addMarker.setVisibility(View.INVISIBLE);
     }
 
+    float getDistance (LatLng ll1, LatLng ll2) {
+        float[] d = new float[1];
+        Location.distanceBetween(ll1.latitude, ll1.longitude, ll2.latitude, ll2.longitude, d);
+        return d[0];
+    }
 
     @Override
     public boolean onMyLocationButtonClick() {
