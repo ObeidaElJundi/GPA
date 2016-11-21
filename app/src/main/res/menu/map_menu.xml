@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/map_menu_scale"
+        android:title="Scale"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/map_menu_Where_am_I"
+        android:title="Where am I"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/map_menu_night_mode"
+        android:title="Night mode"
+        app:showAsAction="never"/>
+
+    <!-- TODO: distance & draw way -->
+
+</menu>

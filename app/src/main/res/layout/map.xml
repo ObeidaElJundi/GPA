@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
             android:textColor="#ACBCCC"
             android:text="Google Maps requires Google Play Services\nwhich are not available!"/>
 
@@ -47,8 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
             android:textColor="#ACBCCC"
-            android:text="Google Maps requires Google Play Services\nwhich are not available!"/>
+            android:text="Opsss! Google Maps can't be shown!"/>
 
     </RelativeLayout>
 
