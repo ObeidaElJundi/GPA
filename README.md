@@ -47,7 +47,7 @@ To show how dangerous the situation is, I created this spyware app that can do p
 
 Note that all these can be performed even if the app is not openned and the device screen is off.
 
-Here is a video demonstrating some of these : https://www.dropbox.com/s/rj4283q8lrnxzjy/GPA.mp4?dl=0
+Here is a video demonstrating some of these : https://www.dropbox.com/s/56dq41hza1ns6m2/GPA.mp4?dl=0
 
 Note that this spyware is for educational purposes only, and I am not responsible for any misuse of it.
 For privacy issues, I've installed and tested it on my device only.
